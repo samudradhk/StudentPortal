@@ -1,0 +1,81 @@
+@import 'bootstrap/scss/bootstrap';
+.navbar-student {
+    background-color: #1f374a; // Warna dasar navbar
+
+    .navbar-brand {
+        letter-spacing: 0.5px;
+        
+        .brand-light {
+            opacity: 0.8;
+        }
+    }
+
+    .custom-switch {
+        cursor: pointer;
+        width: 2.2em;
+        height: 1.1em;
+    }
+
+    .btn-glass {
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    min-height: 40px; 
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+}
+}
+
+
+.dashboard-wrapper {
+    background-color: #f8f9fc;
+    min-height: 100vh;
+    padding-bottom: 2rem;
+
+    .btn-theme {
+        background-color: #1f374a;
+        color: white;
+        border-radius: 6px;
+        transition: background-color 0.2s ease-in-out;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        line-height: 1;
+        min-height: 40px;
+
+        &:hover {
+            background-color: #152633;
+            color: white;
+        }
+    }
+
+    .table-custom {
+        th {
+            font-size: 0.85rem;
+            color: #1a202c;
+            border-bottom: 2px solid #edf2f7;
+            padding: 1rem;
+        }
+        
+        td {
+            vertical-align: middle;
+            padding: 1rem;
+            border-bottom: 1px solid #edf2f7;
+        }
+    }
+
+    .role-badge {
+        background-color: #e2e8f0;
+        color: #4a5568;
+        font-size: 0.9rem;
+    }
+}
