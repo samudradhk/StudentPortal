@@ -119,7 +119,6 @@ class StudentController extends Controller
         $mid_exam = $validated['mid_exam'];
         $final_exam = $validated['final_exam'];
 
-        // Perhitungan otomatis di backend saat input baru
         $score = round(($attendance * 0.10) + ($assignment * 0.20) + ($mid_exam * 0.30) + ($final_exam * 0.40));
 
         $insertData = StudentScores::create([
@@ -165,7 +164,6 @@ class StudentController extends Controller
     }
 
     public function editNilai($id, Request $request){
-        // Menghapus validasi 'score' karena tidak lagi dikirim dari user
         $validated = $request->validate([
             'attendance' => ['numeric', 'min:0', 'max:100'],
             'assignment' => ['numeric', 'min:0', 'max:100'],
@@ -173,13 +171,12 @@ class StudentController extends Controller
             'final_exam' => ['numeric', 'min:0', 'max:100']
         ]);
 
-        // Menghitung ulang nilai akhir secara otomatis
         $score = round(($validated['attendance'] * 0.10) + ($validated['assignment'] * 0.20) + ($validated['mid_exam'] * 0.30) + ($validated['final_exam'] * 0.40));
 
         $scoreRecord = StudentScores::findOrFail($id);
 
         $isUpdated = $scoreRecord->update([
-            'score'      => $score, // Memasukkan hasil hitungan backend
+            'score'      => $score, 
             'attendance' => $validated['attendance'],
             'assignment' => $validated['assignment'],
             'mid_exam'   => $validated['mid_exam'],
