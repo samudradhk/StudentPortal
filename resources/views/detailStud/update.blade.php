@@ -6,14 +6,11 @@
         @include('layouts.navbar')
         
         <div class="container mt-5">
-            <!-- Tombol Back -->
             <div class="mb-4">
                 <a href="{{ route('students.detail', $data->id) }}" class="text-decoration-none text-secondary d-inline-flex align-items-center gap-2 fw-medium">
                     <i class="bi bi-arrow-left"></i> {{ __('main.es.back') }}
                 </a>
             </div>
-
-            <!-- Card Info Mahasiswa -->
             <div class="card shadow-sm border-0 rounded-4 mb-4" style="background-color: #f8f9fc;">
                 <div class="card-body p-3 px-4 d-flex align-items-center gap-3">
                     <div class="rounded-circle d-flex justify-content-center align-items-center bg-white shadow-sm" style="width: 50px; height: 50px;">
@@ -26,7 +23,6 @@
                 </div>
             </div>
             
-            <!-- Card Form Edit Score -->
             <div class="card shadow-sm border-0 rounded-4 mb-5">
                 <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
                     <h5 class="fw-bold mb-0" style="color: #2d3748;">
@@ -40,11 +36,9 @@
                         @csrf
                         @method('PUT') 
                         
-                        <!-- Data wajib yang dikirim secara tersembunyi -->
                         <input name="student_id" type="hidden" value="{{$data->id}}"/>
                         <input name="course_id" type="hidden" value="{{$score->course_id}}"/>
                         
-                        <!-- Course (Locked) -->
                         <div class="col-md-12">
                             <label class="form-label fw-medium text-secondary small mb-1">{{ __('main.es.course') }}</label>
                             <div class="input-group">
@@ -60,7 +54,6 @@
                             </div>
                         </div>
                         
-                        <!-- Input Nilai -->
                         <div class="col-md-4">
                             <label class="form-label fw-medium text-secondary small mb-1">{{ __('main.es.att') }}</label>
                             <div class="input-group">
@@ -85,15 +78,21 @@
                         </div>
                         
                         <div class="col-md-4">
-                            <label class="form-label fw-medium text-secondary small mb-1">{{ __('main.es.score') }}</label>
-                            <input type="number" min="0" max="100" name="score" class="form-control" value="{{old('score', $score->score)}}" required/>
+                            <label class="form-label fw-bold text-secondary small mb-1">
+                                {{ __('main.es.score') }} (Auto)
+                            </label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text border-0" style="background-color: #e2e8f0; color: #4a5568;">
+                                    <i class="bi bi-calculator-fill"></i>
+                                </span>
+                                <input type="number" min="0" max="100" name="score" id="final_score_input" class="form-control border-0 fw-bold" readonly style="background-color: #f1f5f9; color: #2d3748; cursor: not-allowed;" value="{{old('score', $score->score)}}" required/>
+                            </div>
                         </div>
                         
                         <div class="col-12">
                             @include('components.error_message')
                         </div>
                         
-                        <!-- Action Buttons -->
                         <div class="col-12 mt-4 pt-3 border-top d-flex justify-content-end gap-3">
                             <a href="{{ route('students.detail', $data->id) }}" class="btn btn-light px-4 rounded-3 shadow-sm fw-medium">{{ __('main.es.cancel') }}</a>
                             <button type="submit" class="btn btn-warning d-inline-flex align-items-center gap-2 px-4 shadow-sm rounded-3 fw-medium">
@@ -105,4 +104,31 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const attInput = document.querySelector('input[name="attendance"]');
+            const assInput = document.querySelector('input[name="assignment"]');
+            const midInput = document.querySelector('input[name="mid_exam"]');
+            const finInput = document.querySelector('input[name="final_exam"]');
+            const scoreInput = document.querySelector('input[name="score"]');
+
+            function calculateFinalScore() {
+                let att = parseFloat(attInput.value) || 0;
+                let ass = parseFloat(assInput.value) || 0;
+                let mid = parseFloat(midInput.value) || 0;
+                let fin = parseFloat(finInput.value) || 0;
+
+                let finalScore = (att * 0.10) + (ass * 0.20) + (mid * 0.30) + (fin * 0.40);
+                
+                scoreInput.value = Math.round(finalScore); 
+            }
+
+            [attInput, assInput, midInput, finInput].forEach(input => {
+                if(input) {
+                    input.addEventListener('input', calculateFinalScore);
+                }
+            });
+        });
+    </script>
 @endsection

@@ -9,7 +9,6 @@
             <div class="card shadow-sm border-0 rounded-4 mb-4">
                 <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
                     <div class="d-flex align-items-center gap-3">
-                        <!-- Icon Avatar -->
                         <div class="rounded-circle d-flex justify-content-center align-items-center" style="width: 65px; height: 65px; background-color: #e2e8f0;">
                             <i class="bi bi-person-fill fs-1" style="color: #4a5568;"></i>
                         </div>
@@ -87,8 +86,15 @@
                         </div>
                         
                         <div class="col-md-4">
-                            <label class="form-label fw-medium text-secondary small">{{ __('main.dt.score') }}</label>
-                            <input type="number" min="0" max="100" name="score" class="form-control" required/>
+                            <label class="form-label fw-bold text-secondary small">
+                                {{ __('main.dt.score') }} (Auto)
+                            </label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text border-0" style="background-color: #e2e8f0; color: #4a5568;">
+                                    <i class="bi bi-calculator-fill"></i>
+                                </span>
+                                <input type="number" min="0" max="100" name="score" id="final_score_input" class="form-control border-0 fw-bold" readonly style="background-color: #f1f5f9; color: #2d3748; cursor: not-allowed;" required/>
+                            </div>
                         </div>
                         
                         @include('components.error_message')
@@ -158,4 +164,31 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const attInput = document.querySelector('input[name="attendance"]');
+            const assInput = document.querySelector('input[name="assignment"]');
+            const midInput = document.querySelector('input[name="mid_exam"]');
+            const finInput = document.querySelector('input[name="final_exam"]');
+            const scoreInput = document.querySelector('input[name="score"]');
+
+            function calculateFinalScore() {
+                let att = parseFloat(attInput.value) || 0;
+                let ass = parseFloat(assInput.value) || 0;
+                let mid = parseFloat(midInput.value) || 0;
+                let fin = parseFloat(finInput.value) || 0;
+
+                let finalScore = (att * 0.10) + (ass * 0.20) + (mid * 0.30) + (fin * 0.40);
+                
+                scoreInput.value = Math.round(finalScore); 
+            }
+
+            [attInput, assInput, midInput, finInput].forEach(input => {
+                if(input) {
+                    input.addEventListener('input', calculateFinalScore);
+                }
+            });
+        });
+    </script>
 @endsection

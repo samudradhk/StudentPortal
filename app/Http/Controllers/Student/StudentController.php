@@ -57,6 +57,7 @@ class StudentController extends Controller
             'student_name' => ['required'],
             'student_nim' => ['required', 'unique:students,nim', 'numeric', 'min:10'],
         ]);
+        
         if($id == 0 || $id == null){
             return back()->withInput();
         }
@@ -105,7 +106,6 @@ class StudentController extends Controller
         $validated = $request->validate([
             'student_id' => ['required'],
             'course_id' => ['required'],
-            'score' => ['numeric', 'min:0', 'max:100'],
             'attendance' => ['numeric', 'min:0', 'max:100'],
             'assignment' => ['numeric', 'min:0', 'max:100'],
             'mid_exam' => ['numeric', 'min:0', 'max:100'],
@@ -114,11 +114,13 @@ class StudentController extends Controller
         
         $student_id = $validated['student_id'];
         $course_id = $validated['course_id'];
-        $score = $validated['score'];
         $attendance = $validated['attendance'];
         $assignment = $validated['assignment'];
         $mid_exam = $validated['mid_exam'];
         $final_exam = $validated['final_exam'];
+
+        // Perhitungan otomatis di backend saat input baru
+        $score = round(($attendance * 0.10) + ($assignment * 0.20) + ($mid_exam * 0.30) + ($final_exam * 0.40));
 
         $insertData = StudentScores::create([
             'student_id' => $student_id,
@@ -163,18 +165,21 @@ class StudentController extends Controller
     }
 
     public function editNilai($id, Request $request){
+        // Menghapus validasi 'score' karena tidak lagi dikirim dari user
         $validated = $request->validate([
-            'score'      => ['numeric', 'min:0', 'max:100'],
             'attendance' => ['numeric', 'min:0', 'max:100'],
             'assignment' => ['numeric', 'min:0', 'max:100'],
             'mid_exam'   => ['numeric', 'min:0', 'max:100'],
             'final_exam' => ['numeric', 'min:0', 'max:100']
         ]);
 
+        // Menghitung ulang nilai akhir secara otomatis
+        $score = round(($validated['attendance'] * 0.10) + ($validated['assignment'] * 0.20) + ($validated['mid_exam'] * 0.30) + ($validated['final_exam'] * 0.40));
+
         $scoreRecord = StudentScores::findOrFail($id);
 
         $isUpdated = $scoreRecord->update([
-            'score'      => $validated['score'],
+            'score'      => $score, // Memasukkan hasil hitungan backend
             'attendance' => $validated['attendance'],
             'assignment' => $validated['assignment'],
             'mid_exam'   => $validated['mid_exam'],
